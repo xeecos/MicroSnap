@@ -1,5 +1,15 @@
-#include "CH58x_common.h"
+#include "pinmap.h"
 #include "config.h"
+#include "HAL.h"
+#include "gattprofile.h"
+#include "peripheral.h"
+#include "app_usb.h"
+
+__attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
+
+#if(defined(BLE_MAC)) && (BLE_MAC == TRUE)
+const uint8_t MacAddr[6] = {0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02};
+#endif
 int main(void)
 {
 #if(defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
@@ -7,6 +17,12 @@ int main(void)
 #endif
     SetSysClock(CLK_SOURCE_PLL_60MHz);
     /* for blinky */
+    CH58X_BLEInit();
+    HAL_Init();
+    GAPRole_PeripheralInit();
+    Peripheral_Init();
+    app_usb_init();
+    
     GPIOA_ModeCfg(PIN_STEPPER_DIR|PIN_STEPPER_STEP, GPIO_ModeOut_PP_20mA);
     GPIOB_ModeCfg(PIN_LED|PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
     GPIOB_SetBits(PIN_LED);
@@ -28,12 +44,13 @@ int main(void)
         DelayUs(400);
     }
     GPIOB_SetBits(PIN_STEPPER_EN);
-    while (1)
+    while(1)
     {
         GPIOB_SetBits(PIN_LED);
         DelayMs(1000);
         GPIOB_ResetBits(PIN_LED);
         DelayMs(1000);
+        TMOS_SystemProcess();
     }
 }
 
