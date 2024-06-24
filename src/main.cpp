@@ -20,7 +20,6 @@ int main(void)
 #endif
     SetSysClock(CLK_SOURCE_PLL_60MHz);
     SysTick_Config(60000);
-    /* for blinky */
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
@@ -31,43 +30,46 @@ int main(void)
     GPIOB_ModeCfg(PIN_LED|PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
     GPIOB_SetBits(PIN_LED);
 
-    uart_init();
-    stepper.begin();
-    while (stepper.test_connection())
-    {
-        DelayMs(1000);
-    }
+    // uart_init();
+    // stepper.begin();
+    // while (stepper.test_connection())
+    // {
+    //     DelayMs(1000);
+    // }
     // stepper.internal_Rsense(false);
     // stepper.dedge(true);
     // stepper.microsteps(256);
     // stepper.rms_current(2000);
     // stepper.toff(2);
     // stepper.push();
-    GPIOB_ResetBits(PIN_STEPPER_EN);
-    GPIOA_SetBits(PIN_STEPPER_DIR);
-    for(int i = 0; i < 1000; i++)
-    {
-        GPIOA_SetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
-        GPIOA_ResetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
-    }
-    GPIOA_ResetBits(PIN_STEPPER_DIR);
-    for(int i = 0; i < 1000; i++)
-    {
-        GPIOA_SetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
-        GPIOA_ResetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
-    }
+    // GPIOB_ResetBits(PIN_STEPPER_EN);
+    // GPIOA_SetBits(PIN_STEPPER_DIR);
+    // for(int i = 0; i < 1000; i++)
+    // {
+    //     GPIOA_SetBits(PIN_STEPPER_STEP);
+    //     DelayUs(400);
+    //     GPIOA_ResetBits(PIN_STEPPER_STEP);
+    //     DelayUs(400);
+    // }
+    // GPIOA_ResetBits(PIN_STEPPER_DIR);
+    // for(int i = 0; i < 1000; i++)
+    // {
+    //     GPIOA_SetBits(PIN_STEPPER_STEP);
+    //     DelayUs(400);
+    //     GPIOA_ResetBits(PIN_STEPPER_STEP);
+    //     DelayUs(400);
+    // }
     GPIOB_SetBits(PIN_STEPPER_EN);
     while(1)
     {
         GPIOB_SetBits(PIN_LED);
-        DelayMs(1000);
+        DelayMs(100);
         GPIOB_ResetBits(PIN_LED);
-        DelayMs(1000);
-        TMOS_SystemProcess();
+        DelayMs(100);
+        // stepper.test_connection();
+        
+        // 
+        TMOS_SystemProcess(); 
     }
 }
 

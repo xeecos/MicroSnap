@@ -5,13 +5,6 @@
 #include "ble_usb_service.h"
 #include "app_usb.h"
 
-/*********************************************************************
- * MACROS
- */
-
-/*********************************************************************
- * CONSTANTS
- */
 
 // How often to perform periodic event
 #define SBP_PERIODIC_EVT_PERIOD              1600
@@ -47,25 +40,6 @@
 // Company Identifier: WCH
 #define WCH_COMPANY_ID                       0x07D7
 
-/*********************************************************************
- * TYPEDEFS
- */
-
-/*********************************************************************
- * GLOBAL VARIABLES
- */
-
-/*********************************************************************
- * EXTERNAL VARIABLES
- */
-
-/*********************************************************************
- * EXTERNAL FUNCTIONS
- */
-
-/*********************************************************************
- * LOCAL VARIABLES
- */
 static uint8_t Peripheral_TaskID = INVALID_TASK_ID; // Task ID for internal task/event processing
 
 // GAP - SCAN RSP data (max size = 31 bytes)
@@ -324,7 +298,7 @@ uint16_t Peripheral_ProcessEvent(uint8_t task_id, uint16_t events)
             tmos_start_task(Peripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD);
         }
         // Perform periodic application task
-        performPeriodicTask();
+        // performPeriodicTask();
         return (events ^ SBP_PERIODIC_EVT);
     }
 
@@ -644,7 +618,7 @@ static void peripheralStateNotificationCB(gapRole_States_t newState, gapRoleEven
  */
 static void performPeriodicTask(void)
 {
-    uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x88};
+    uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x32};
     peripheralChar4Notify(notiData, SIMPLEPROFILE_CHAR4_LEN);
 }
 

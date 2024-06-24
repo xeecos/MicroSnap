@@ -44,11 +44,11 @@ extern "C" {
 #define SIMPLEPROFILE_SERVICE       0x00000001
 
 // Length of characteristic in bytes ( Default MTU is 23 )
-#define SIMPLEPROFILE_CHAR1_LEN     1
-#define SIMPLEPROFILE_CHAR2_LEN     1
-#define SIMPLEPROFILE_CHAR3_LEN     1
-#define SIMPLEPROFILE_CHAR4_LEN     1
-#define SIMPLEPROFILE_CHAR5_LEN     5
+#define SIMPLEPROFILE_CHAR1_LEN     18
+#define SIMPLEPROFILE_CHAR2_LEN     18
+#define SIMPLEPROFILE_CHAR3_LEN     18
+#define SIMPLEPROFILE_CHAR4_LEN     18
+#define SIMPLEPROFILE_CHAR5_LEN     18
 
 /*********************************************************************
  * TYPEDEFS

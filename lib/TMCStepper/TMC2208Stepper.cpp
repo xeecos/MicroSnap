@@ -1,6 +1,6 @@
 #include "TMCStepper.h"
 #include "TMC_MACROS.h"
-
+void uart_send(uint8_t*msg,int len);
 // Protected
 // addr needed for TMC2209
 TMC2208Stepper::TMC2208Stepper(float RS, uint8_t addr) : TMCStepper(RS), slave_address(addr)
@@ -90,6 +90,8 @@ int16_t TMC2208Stepper::serial_read() {
 __attribute__((weak))
 uint8_t TMC2208Stepper::serial_write(const uint8_t data) {
 	int out = 0;
+	uint8_t c = data;
+	uart_send(&c,1);
 	return out;
 }
 

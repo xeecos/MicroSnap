@@ -1,5 +1,6 @@
 #pragma once
-
+#include "app_usb.h"
+#include "config.h"
 void uart_init() {
     // if(remap){
     //     //重映射
@@ -44,8 +45,10 @@ void UART3_IRQHandler(void){
         case UART_II_RECV_RDY:
         case UART_II_RECV_TOUT:
             while(R8_UART3_RFC) {
-                uart_rx_buffer[user_rx_buffer_write_index & user_rx_buffer_length_mask] = R8_UART3_RBR;
-                user_rx_buffer_write_index += 1;
+                // uart_rx_buffer[user_rx_buffer_write_index & user_rx_buffer_length_mask] = R8_UART3_RBR;
+                // user_rx_buffer_write_index += 1;
+                uint8_t c = R8_UART3_RBR;
+                USBSendData(&c, 1);
             }
             break;
         case UART_II_THR_EMPTY: // 发送缓存区空，可继续发送
@@ -56,15 +59,16 @@ void UART3_IRQHandler(void){
             break;
      }
 }
-void uart_send()
+void uart_send(uint8_t*msg,int len)
 {
+    int i = 0;
     while(R8_UART3_TFC < UART_FIFO_SIZE)
     {
         //判断发送软件缓冲区,是否空,如果不空,就一个一个读出来,填到硬件fifo里
-        if((user_tx_buffer_write_index - user_tx_buffer_read_index )& user_tx_buffer_length_mask) {
+        if(i<len) {
             //把软件缓冲区的数据填到uart的硬件发送fifo里
-            R8_UART1_THR = uart_tx_buffer[user_tx_buffer_read_index & user_tx_buffer_length_mask] ;  
-            user_tx_buffer_read_index += 1;
+            R8_UART1_THR = msg[i];
+            i++;
         }else{
             break;
         }
