@@ -1,17 +1,3 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : app_usb.c
- * Author             : WCH
- * Version            : V1.1
- * Date               : 2022/01/19
- * Description        :
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
- *******************************************************************************/
-
-/*********************************************************************
- * INCLUDES
- */
-
 #include "config.h"
 #include "gattprofile.h"
 #include "stdint.h"
@@ -45,9 +31,9 @@ const uint8_t MyCfgDescr[] = {   0x09,0x02,0x27,0x00,0x01,0x01,0x00,0x80,0xf0,  
 // 语言描述符
 const uint8_t MyLangDescr[] = { 0x04, 0x03, 0x09, 0x04 };
 // 厂家信息
-const uint8_t MyManuInfo[] = { 0x0E, 0x03, 'w', 0, 'c', 0, 'h', 0, '.', 0, 'c', 0, 'n', 0 };
+const uint8_t MyManuInfo[] = { 0x0E, 0x03, 'Y', 0, 'o', 0, 'u', 0, 'h', 0, 'u', 0, 'a', 0 };
 // 产品信息
-const uint8_t MyProdInfo[] = { 0x0C, 0x03, 'C', 0, 'H', 0, '5', 0, '7', 0, 'x', 0 };
+const uint8_t MyProdInfo[] = { 0x14, 0x03, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, 'S', 0, 'n', 0, 'a', 0, 'p', 0 };
 /*产品描述符*/
 const uint8_t StrDesc[28] =
 {

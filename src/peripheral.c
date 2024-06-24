@@ -1,17 +1,3 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : peripheral.C
- * Author             : WCH
- * Version            : V1.0
- * Date               : 2018/12/10
- * Description        : ����ӻ�������Ӧ�ó��򣬳�ʼ���㲥���Ӳ�����Ȼ��㲥������������
- *                      ����������Ӳ�����ͨ���Զ������������
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
- *******************************************************************************/
-
-/*********************************************************************
- * INCLUDES
- */
 #include "config.h"
 #include "devinfoservice.h"
 #include "gattprofile.h"
@@ -85,25 +71,17 @@ static uint8_t Peripheral_TaskID = INVALID_TASK_ID; // Task ID for internal task
 // GAP - SCAN RSP data (max size = 31 bytes)
 static uint8_t scanRspData[] = {
     // complete name
-    0x12, // length of this data
+    0x0A, // length of this data
     GAP_ADTYPE_LOCAL_NAME_COMPLETE,
+    'M',
+    'i',
+    'c',
+    'r',
+    'o',
     'S',
-    'i',
-    'm',
-    'p',
-    'l',
-    'e',
-    ' ',
-    'P',
-    'e',
-    'r',
-    'i',
-    'p',
-    'h',
-    'e',
-    'r',
+    'n',
     'a',
-    'l',
+    'p',
     // connection interval range
     0x05, // length of this data
     GAP_ADTYPE_SLAVE_CONN_INTERVAL_RANGE,
@@ -137,7 +115,7 @@ static uint8_t advertData[] = {
 };
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple Peripheral";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "MicroSnap";
 
 // Connection item list
 static peripheralConnItem_t peripheralConnList;
