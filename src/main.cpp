@@ -31,17 +31,17 @@ int main(void)
     GPIOB_SetBits(PIN_LED);
 
     // uart_init();
-    // stepper.begin();
+    stepper.begin();
     // while (stepper.test_connection())
     // {
     //     DelayMs(1000);
     // }
-    // stepper.internal_Rsense(false);
-    // stepper.dedge(true);
-    // stepper.microsteps(256);
-    // stepper.rms_current(2000);
-    // stepper.toff(2);
-    // stepper.push();
+    stepper.internal_Rsense(false);
+    stepper.dedge(true);
+    stepper.microsteps(256);
+    stepper.rms_current(1000);
+    stepper.toff(2);
+    stepper.push();
     // GPIOB_ResetBits(PIN_STEPPER_EN);
     // GPIOA_SetBits(PIN_STEPPER_DIR);
     // for(int i = 0; i < 1000; i++)
