@@ -2,26 +2,13 @@
 #include "app_usb.h"
 #include "config.h"
 void uart_init() {
-    // if(remap){
-    //     //重映射
-    //     GPIOPinRemap( ENABLE, RB_PIN_UART3 );
-    //     //TXD gpio初始化
-    //     GPIOB_SetBits(bTXD3_);
-    //     GPIOB_ModeCfg(bTXD3_, GPIO_ModeOut_PP_5mA);
-    //     //RXD gpio初始化
-    //     GPIOB_SetBits(bRXD3_);
-    //     GPIOB_ModeCfg(bRXD3_, GPIO_ModeIN_PU);
-    // } else {
-        //不使能重映射
-        GPIOPinRemap( DISABLE, RB_PIN_UART3 );
-        //TXD gpio初始化
-        GPIOA_SetBits(bTXD3);
-        GPIOA_ModeCfg(bTXD3, GPIO_ModeOut_PP_5mA);
-        //RXD gpio初始化
-        GPIOA_SetBits(bRXD3);
-        GPIOA_ModeCfg(bRXD3, GPIO_ModeIN_PU);
-    // }
-    //uart3 init
+    GPIOPinRemap( DISABLE, RB_PIN_UART3 );
+    //TXD gpio初始化
+    GPIOA_SetBits(bTXD3);
+    GPIOA_ModeCfg(bTXD3, GPIO_ModeOut_PP_5mA);
+    //RXD gpio初始化
+    GPIOA_SetBits(bRXD3);
+    GPIOA_ModeCfg(bRXD3, GPIO_ModeIN_PU);
     UART3_DefInit();
     UART3_BaudRateCfg(115200);
  

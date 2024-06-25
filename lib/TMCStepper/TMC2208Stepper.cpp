@@ -111,12 +111,10 @@ void TMC2208Stepper::write2(uint8_t addr, uint32_t regVal) {
 
 	datagram[len] = calcCRC(datagram, len);
 
-	preWriteCommunication();
 
 	for(uint8_t i=0; i<=len; i++) {
 		bytesWritten += serial_write(datagram[i]);
 	}
-	postWriteCommunication();
 
 	DelayMs(replyDelay);
 }

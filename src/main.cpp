@@ -28,23 +28,25 @@ int main(void)
     
     GPIOA_ModeCfg(PIN_STEPPER_DIR|PIN_STEPPER_STEP, GPIO_ModeOut_PP_20mA);
     GPIOB_ModeCfg(PIN_LED|PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
-    GPIOB_ResetBits(PIN_LED);
     GPIOB_SetBits(PIN_STEPPER_EN);
+    GPIOB_ResetBits(PIN_LED);
 
+    DelayMs(1000);
+    GPIOB_SetBits(PIN_LED);
     uart_init();
-    stepper.begin();
-    stepper.internal_Rsense(false);
-    stepper.dedge(true);
-    stepper.microsteps(256);
-    stepper.rms_current(1000);
-    stepper.toff(2);
-    stepper.push();
+    // stepper.begin();
+    // stepper.internal_Rsense(false);
+    // stepper.dedge(true);
+    // stepper.microsteps(256);
+    // stepper.rms_current(1000);
+    // stepper.toff(2);
+    // stepper.push();
     GPIOB_ResetBits(PIN_STEPPER_EN);
     GPIOA_SetBits(PIN_STEPPER_DIR);
     for(int i = 0; i < 1000; i++)
     {
         GPIOA_SetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
+        DelayUs(1);
         GPIOA_ResetBits(PIN_STEPPER_STEP);
         DelayUs(400);
     }
@@ -52,7 +54,7 @@ int main(void)
     for(int i = 0; i < 1000; i++)
     {
         GPIOA_SetBits(PIN_STEPPER_STEP);
-        DelayUs(400);
+        DelayUs(1);
         GPIOA_ResetBits(PIN_STEPPER_STEP);
         DelayUs(400);
     }
@@ -62,16 +64,16 @@ int main(void)
         // uint8_t c = stepper.test_connection();
         // if(c==0)
         // {
-        //     GPIOB_SetBits(PIN_LED);
-        //     DelayMs(100);
-        //     GPIOB_ResetBits(PIN_LED);
         // }
-        // DelayMs(100);
+        GPIOB_SetBits(PIN_LED);
+        DelayMs(100);
+        GPIOB_ResetBits(PIN_LED);
+        DelayMs(100);
         //     USBSendData(&c, 1);
         //     c = 0xa;
         //     USBSendData(&c, 1);
         // 
-        TMOS_SystemProcess(); 
+        // TMOS_SystemProcess(); 
     }
 }
 
