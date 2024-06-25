@@ -28,10 +28,11 @@ int main(void)
     
     GPIOA_ModeCfg(PIN_STEPPER_DIR|PIN_STEPPER_STEP, GPIO_ModeOut_PP_20mA);
     GPIOB_ModeCfg(PIN_LED|PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
-    GPIOB_SetBits(PIN_LED);
+    GPIOB_ResetBits(PIN_LED);
+    GPIOB_SetBits(PIN_STEPPER_EN);
 
-    // uart_init();
-    // stepper.begin();
+    uart_init();
+    stepper.begin();
     // while (stepper.test_connection())
     // {
     //     DelayMs(1000);
@@ -62,12 +63,17 @@ int main(void)
     GPIOB_SetBits(PIN_STEPPER_EN);
     while(1)
     {
-        GPIOB_SetBits(PIN_LED);
+        uint8_t c = stepper.test_connection();
+        if(c==0)
+        {
+            GPIOB_SetBits(PIN_LED);
+            DelayMs(100);
+            GPIOB_ResetBits(PIN_LED);
+        }
         DelayMs(100);
-        GPIOB_ResetBits(PIN_LED);
-        DelayMs(100);
-        // stepper.test_connection();
-        
+            USBSendData(&c, 1);
+            c = 0xa;
+            USBSendData(&c, 1);
         // 
         TMOS_SystemProcess(); 
     }

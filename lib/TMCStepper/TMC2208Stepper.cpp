@@ -9,8 +9,11 @@ TMC2208Stepper::TMC2208Stepper(float RS, uint8_t addr) : TMCStepper(RS), slave_a
 }
 
 void TMC2208Stepper::begin() {
-	pdn_disable(true);
-	mstep_reg_select(true);
+	GCONF_register.pdn_disable = true;
+	GCONF_register.mstep_reg_select = true;
+	write2(TMC2208_SLAVE_ADDR, GCONF_register.sr);
+	// pdn_disable(true);
+	// mstep_reg_select(true);
 }
 
 void TMC2208Stepper::defaults() {
@@ -65,7 +68,7 @@ uint8_t TMC2208Stepper::calcCRC(uint8_t datagram[], uint8_t len) {
 
 __attribute__((weak))
 int TMC2208Stepper::available() {
-	int out = 0;
+	int out = R8_UART3_RFC;
 	return out;
 }
 
@@ -81,9 +84,7 @@ void TMC2208Stepper::preReadCommunication() {
 
 __attribute__((weak))
 int16_t TMC2208Stepper::serial_read() {
-	int16_t out = 0;
-	
-
+	int16_t out = R8_UART3_RBR;
 	return out;
 }
 
@@ -102,7 +103,8 @@ __attribute__((weak))
 void TMC2208Stepper::postReadCommunication() {
 }
 
-void TMC2208Stepper::write(uint8_t addr, uint32_t regVal) {
+void TMC2208Stepper::write(uint8_t addr, uint32_t regVal) {}
+void TMC2208Stepper::write2(uint8_t addr, uint32_t regVal) {
 	uint8_t len = 7;
 	addr |= TMC_WRITE;
 	uint8_t datagram[] = {TMC2208_SYNC, slave_address, addr, (uint8_t)(regVal>>24), (uint8_t)(regVal>>16), (uint8_t)(regVal>>8), (uint8_t)(regVal>>0), 0x00};
@@ -122,20 +124,7 @@ void TMC2208Stepper::write(uint8_t addr, uint32_t regVal) {
 uint64_t TMC2208Stepper::_sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t timeout) {
 	while (available() > 0) serial_read(); // Flush
 
-	#if defined(ARDUINO_ARCH_AVR)
-		if (RXTX_pin > 0) {
-			digitalWrite(RXTX_pin, HIGH);
-			pinMode(RXTX_pin, OUTPUT);
-		}
-	#endif
-
 	for(int i=0; i<=len; i++) serial_write(datagram[i]);
-
-	#if defined(ARDUINO_ARCH_AVR)
-		if (RXTX_pin > 0) {
-			pinMode(RXTX_pin, INPUT_PULLUP);
-		}
-	#endif
 
 	DelayMs(this->replyDelay);
 
@@ -183,13 +172,6 @@ uint64_t TMC2208Stepper::_sendDatagram(uint8_t datagram[], const uint8_t len, ui
 
 		i++;
 	}
-
-	#if defined(ARDUINO_ARCH_AVR)
-		if (RXTX_pin > 0) {
-			digitalWrite(RXTX_pin, HIGH);
-			pinMode(RXTX_pin, OUTPUT);
-		}
-	#endif
 
 	while (available() > 0) serial_read(); // Flush
 

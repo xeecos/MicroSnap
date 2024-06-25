@@ -274,6 +274,7 @@ class TMC2208Stepper : public TMCStepper {
 		void postWriteCommunication();
 		void postReadCommunication();
 		void write(uint8_t, uint32_t);
+		void write2(uint8_t, uint32_t);
 		uint32_t read(uint8_t);
 		const uint8_t slave_address;
 		uint8_t calcCRC(uint8_t datagram[], uint8_t len);

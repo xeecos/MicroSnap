@@ -26,8 +26,8 @@ void uart_init() {
     UART3_BaudRateCfg(115200);
  
     //enable interupt
-    UART3_INTCfg(ENABLE, RB_IER_RECV_RDY | RB_IER_LINE_STAT);
-    PFIC_EnableIRQ(UART3_IRQn);
+    // UART3_INTCfg(ENABLE, RB_IER_RECV_RDY | RB_IER_LINE_STAT);
+    // PFIC_EnableIRQ(UART3_IRQn);
 }
 uint16_t user_rx_buffer_length_mask = 1024-1;
 uint16_t user_rx_buffer_write_index = 0;
