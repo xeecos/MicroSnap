@@ -5,8 +5,7 @@
 #include "peripheral.h"
 #include "app_usb.h"
 #include "uart.h"
-#include "TMCStepper.h"
-TMC2208Stepper stepper(0.1);
+#include "stepper.h"
 
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 

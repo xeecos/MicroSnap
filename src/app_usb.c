@@ -111,9 +111,8 @@ void DevEP1_OUT_Deal( uint8_t l )
  * @return  none
  */
 void DevEP2_OUT_Deal( uint8_t l )
-{ /* 用户可自定义 */
-  uint8_t i;
-
+{ 
+  /* 用户可自定义 */
   app_usb_notify(pEP2_OUT_DataBuf, l);
 }
 

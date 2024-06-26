@@ -1,4 +1,4 @@
-#pragma once
+#include "uart.h"
 #include "app_usb.h"
 #include "config.h"
 void uart_init() {

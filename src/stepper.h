@@ -1,200 +1,299 @@
-// #pragma once
+#pragma once
+#include <stdint.h>
 
+struct IHOLD_IRUN_t
+{
+    constexpr static uint8_t address = 0x10;
+    union
+    {
+        uint32_t sr : 20;
+        struct
+        {
+            uint8_t ihold : 5, : 3,
+                irun : 5, : 3,
+                iholddelay : 4;
+        };
+    };
+};
 
-// void begin() 
-// {
-// 	GCONF_register.i_scale_analog = 1;
-// 	GCONF_register.internal_rsense = 0; // OTP
-// 	GCONF_register.en_spreadcycle = 0; // OTP
-// 	GCONF_register.multistep_filt = 1; // OTP
-//     GCONF_register.pdn_disable = 1;
-// 	GCONF_register.mstep_reg_select = 1;
-// 	IHOLD_IRUN_register.iholddelay = 1; // OTP
-// 	TPOWERDOWN_register.sr = 20;
-// 	CHOPCONF_register.sr = 0x10000053;
-// 	PWMCONF_register.sr = 0xC10D0024;
-// }
-// static float Rsense = 0.1;
-// void rms_current(uint16_t mA) {
-//   uint8_t CS = 32.0*1.41421*mA/1000.0*(Rsense+0.02)/0.325 - 1;
-//   // If Current Scale is too low, turn on high sensitivity R_sense and calculate again
-//   if (CS < 16) {
-//     vsense(true);
-//     CS = 32.0*1.41421*mA/1000.0*(Rsense+0.02)/0.180 - 1;
-//   } else { // If CS >= 16, turn off high_sense_r
-//     vsense(false);
-//   }
+struct GSTAT_t
+{
+    constexpr static uint8_t address = 0x01;
+    union
+    {
+        uint8_t sr : 3;
+        struct
+        {
+            bool reset : 1,
+                drv_err : 1,
+                uv_cp : 1;
+        };
+    };
+};
 
-//   if (CS > 31)
-//     CS = 31;
+struct TPOWERDOWN_t
+{
+    constexpr static uint8_t address = 0x11;
+    uint8_t sr : 8;
+};
 
-//   irun(CS);
-//   ihold(CS*holdMultiplier);
-//   //val_mA = mA;
-// }
+struct TPWMTHRS_t
+{
+    constexpr static uint8_t address = 0x13;
+    uint32_t sr : 20;
+};
 
-// void microsteps(uint16_t ms) {
-//   switch(ms) {
-//     case 256: mres(0); break;
-//     case 128: mres(1); break;
-//     case  64: mres(2); break;
-//     case  32: mres(3); break;
-//     case  16: mres(4); break;
-//     case   8: mres(5); break;
-//     case   4: mres(6); break;
-//     case   2: mres(7); break;
-//     case   0: mres(8); break;
-//     default: break;
-//   }
-// }
-// void push() {
-// 	GCONF(GCONF_register.sr);
-// 	IHOLD_IRUN(IHOLD_IRUN_register.sr);
-// 	SLAVECONF(SLAVECONF_register.sr);
-// 	TPOWERDOWN(TPOWERDOWN_register.sr);
-// 	TPWMTHRS(TPWMTHRS_register.sr);
-// 	VACTUAL(VACTUAL_register.sr);
-// 	CHOPCONF(CHOPCONF_register.sr);
-// 	PWMCONF(PWMCONF_register.sr);
-// }
+struct THIGH_t
+{
+    constexpr static uint8_t address = 0x15;
+    uint32_t sr : 20;
+};
 
-// uint8_t calcCRC(uint8_t datagram[], uint8_t len) {
-// 	uint8_t crc = 0;
-// 	for (uint8_t i = 0; i < len; i++) {
-// 		uint8_t currentByte = datagram[i];
-// 		for (uint8_t j = 0; j < 8; j++) {
-// 			if ((crc >> 7) ^ (currentByte & 0x01)) {
-// 				crc = (crc << 1) ^ 0x07;
-// 			} else {
-// 				crc = (crc << 1);
-// 			}
-// 			crc &= 0xff;
-// 			currentByte = currentByte >> 1;
-// 		}
-// 	}
-// 	return crc;
-// }
+struct XDIRECT_t
+{
+    constexpr static uint8_t address = 0x2D;
+    union
+    {
+        uint32_t sr : 25;
+        struct
+        {
+            int16_t coil_A : 9;
+            int8_t : 7;
+            int16_t coil_B : 9;
+        };
+    };
+};
 
-// uint8_t serial_available() {
-// 	int out = 0;
-// 	return out;
-// }
-// uint8_t serial_read() {
-// 	int out = 0;
-// 	return out;
-// }
-// uint8_t serial_write(const uint8_t data) {
-// 	int out = 0;
-// 	uint8_t c = data;
-// 	uart_send(&c,1);
-// 	return out;
-// }
+struct VDCMIN_t
+{
+    constexpr static uint8_t address = 0x33;
+    uint32_t sr : 23;
+};
 
-// static constexpr uint8_t TMC_READ = 0x00, TMC_WRITE = 0x80;
-// static constexpr uint8_t  TMC2208_SYNC = 0x05, TMC2208_SLAVE_ADDR = 0x00;
-// static constexpr uint8_t abort_window = 5;
-// static constexpr uint8_t max_retries = 2;
-// void write(uint8_t addr, uint32_t regVal) {
-// 	uint8_t len = 7;
-// 	addr |= TMC_WRITE;
-// 	uint8_t datagram[] = {TMC2208_SYNC, TMC2208_SLAVE_ADDR, addr, (uint8_t)(regVal>>24), (uint8_t)(regVal>>16), (uint8_t)(regVal>>8), (uint8_t)(regVal>>0), 0x00};
+struct CHOPCONF_t
+{
+    constexpr static uint8_t address = 0x6C;
+    union
+    {
+        uint32_t sr;
+        struct
+        {
+            uint8_t toff : 4,
+                hstrt : 3,
+                hend : 4, : 4,
+                tbl : 2;
+            bool vsense : 1;
+            uint8_t : 6,
+                mres : 4;
+            bool intpol : 1,
+                dedge : 1,
+                diss2g : 1,
+                diss2vs : 1;
+        };
+    };
+};
 
-// 	datagram[len] = calcCRC(datagram, len);
+struct COOLCONF_t
+{
+    constexpr static uint8_t address = 0x6D;
+    union
+    {
+        uint32_t sr : 25;
+        struct
+        {
+            uint8_t semin : 4, : 1,
+                seup : 2, : 1,
+                semax : 4, : 1,
+                sedn : 2;
+            bool seimin : 1;
+            int8_t sgt : 7, : 1;
+            bool sfilt : 1;
+        };
+    };
+};
 
-// 	for(uint8_t i=0; i<=len; i++) {
-// 		bytesWritten += serial_write(datagram[i]);
-// 	}
+struct DCCTRL_t
+{
+    constexpr static uint8_t address = 0x6E;
+    union
+    {
+        uint32_t sr : 24;
+        struct
+        {
+            uint16_t dc_time : 10, : 6;
+            uint8_t dc_sg : 8;
+        };
+    };
+};
 
-// 	DelayMs(2);
-// }
-// uint32_t read(uint8_t addr) {
-// 	constexpr uint8_t len = 3;
-// 	addr |= TMC_READ;
-// 	uint8_t datagram[] = {TMC2208_SYNC, TMC2208_SLAVE_ADDR, addr, 0x00};
-// 	datagram[len] = calcCRC(datagram, len);
-// 	uint64_t out = 0x00000000UL;
+struct SLAVECONF_t
+{
+    constexpr static uint8_t address = 0x03;
+    union
+    {
+        uint16_t sr : 12;
+        struct
+        {
+            uint8_t slaveaddr : 8;
+            uint8_t senddelay : 4;
+        };
+    };
+};
 
-// 	for (uint8_t i = 0; i < max_retries; i++) {
-// 		out = _sendDatagram(datagram, len, abort_window);
+struct PWM_AUTO_t
+{
+    constexpr static uint8_t address = 0x72;
+    union
+    {
+        uint32_t sr : 24;
+        struct
+        {
+            uint8_t pwm_ofs_auto : 8, : 8,
+                pwm_grad_auto : 8;
+        };
+    };
+};
+struct GCONF_t
+{
+    constexpr static uint8_t address = 0x00;
+    union
+    {
+        uint16_t sr : 10;
+        struct
+        {
+            bool i_scale_analog : 1,
+                internal_rsense : 1,
+                en_spreadcycle : 1,
+                shaft : 1,
+                index_otpw : 1,
+                index_step : 1,
+                pdn_disable : 1,
+                mstep_reg_select : 1,
+                multistep_filt : 1,
+                test_mode : 1;
+        };
+    };
+};
 
-// 		DelayMs(2);
+struct IOIN_t
+{
+    constexpr static uint8_t address = 0x06;
+    union
+    {
+        uint32_t sr;
+        struct
+        {
+            bool enn : 1, : 1,
+                ms1 : 1,
+                ms2 : 1,
+                diag : 1, : 1,
+                pdn_uart : 1,
+                step : 1,
+                sel_a : 1,
+                dir : 1;
+            uint16_t : 14;
+            uint8_t version : 8;
+        };
+    };
+};
 
-// 		CRCerror = false;
-// 		uint8_t out_datagram[] = {
-// 			static_cast<uint8_t>(out>>56),
-// 			static_cast<uint8_t>(out>>48),
-// 			static_cast<uint8_t>(out>>40),
-// 			static_cast<uint8_t>(out>>32),
-// 			static_cast<uint8_t>(out>>24),
-// 			static_cast<uint8_t>(out>>16),
-// 			static_cast<uint8_t>(out>> 8),
-// 			static_cast<uint8_t>(out>> 0)
-// 		};
-// 		uint8_t crc = calcCRC(out_datagram, 7);
-// 		if ((crc != static_cast<uint8_t>(out)) || crc == 0 ) {
-// 			CRCerror = true;
-// 			out = 0;
-// 		} else {
-// 			break;
-// 		}
-// 	}
+struct FACTORY_CONF_t
+{
+    constexpr static uint8_t address = 0x07;
+    union
+    {
+        uint16_t sr;
+        struct
+        {
+            uint8_t fclktrim : 5, : 3,
+                ottrim : 2;
+        };
+    };
+};
 
-// 	return out>>8;
-// }
+struct VACTUAL_t
+{
+    constexpr static uint8_t address = 0x22;
+    uint32_t sr;
+};
 
-// uint64_t _sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t timeout) {
-// 	while (serial_available() > 0) serial_read(); // Flush
+struct MSCURACT_t
+{
+    constexpr static uint8_t address = 0x6B;
+    union
+    {
+        uint32_t sr : 25;
+        struct
+        {
+            int16_t cur_a : 9, : 7,
+                cur_b : 9;
+        };
+    };
+};
 
-// 	for(int i=0; i<=len; i++) serial_write(datagram[i]);
+struct PWMCONF_t
+{
+    constexpr static uint8_t address = 0x70;
+    union
+    {
+        uint32_t sr;
+        struct
+        {
+            uint8_t pwm_ofs : 8,
+                pwm_grad : 8,
+                pwm_freq : 2;
+            bool pwm_autoscale : 1,
+                pwm_autograd : 1;
+            uint8_t freewheel : 2, : 2,
+                pwm_reg : 4,
+                pwm_lim : 4;
+        };
+    };
+};
 
-// 	DelayMs(this->replyDelay);
+struct DRV_STATUS_t
+{
+    constexpr static uint8_t address = 0x6F;
+    union
+    {
+        uint32_t sr;
+        struct
+        {
+            bool otpw : 1,
+                ot : 1,
+                s2ga : 1,
+                s2gb : 1,
+                s2vsa : 1,
+                s2vsb : 1,
+                ola : 1,
+                olb : 1,
+                t120 : 1,
+                t143 : 1,
+                t150 : 1,
+                t157 : 1;
+            uint8_t : 4,
+                cs_actual : 5, : 3, : 6;
+            bool stealth : 1,
+                stst : 1;
+        };
+    };
+};
 
-// 	// scan for the rx frame and read it
-// 	uint32_t ms = SYS_GetSysTickCnt();
-// 	uint32_t sync_target = (static_cast<uint32_t>(datagram[0])<<16) | 0xFF00 | datagram[2];
-// 	uint32_t sync = 0;
+struct PWM_SCALE_t
+{
+    constexpr static uint8_t address = 0x71;
+    union
+    {
+        uint32_t sr;
+        struct
+        {
+            uint8_t pwm_scale_sum : 8, : 8;
+            int16_t pwm_scale_auto : 9;
+        };
+    };
+};
 
-// 	do {
-// 		uint32_t ms2 = SYS_GetSysTickCnt();
-// 		if (ms2 != ms) {
-// 			// 1ms tick
-// 			ms = ms2;
-// 			timeout--;
-// 		}
-// 		if (!timeout) return 0;
-
-// 		int16_t res = serial_read();
-// 		if (res < 0) continue;
-
-// 		sync <<= 8;
-// 		sync |= res & 0xFF;
-// 		sync &= 0xFFFFFF;
-
-// 	} while (sync != sync_target);
-
-// 	uint64_t out = sync;
-// 	ms = SYS_GetSysTickCnt();
-// 	timeout = this->abort_window;
-
-// 	for(uint8_t i=0; i<5;) {
-// 		uint32_t ms2 = SYS_GetSysTickCnt();
-// 		if (ms2 != ms) {
-// 			// 1ms tick
-// 			ms = ms2;
-// 			timeout--;
-// 		}
-// 		if (!timeout) return 0;
-
-// 		int16_t res = serial_read();
-// 		if (res < 0) continue;
-
-// 		out <<= 8;
-// 		out |= res & 0xFF;
-
-// 		i++;
-// 	}
-
-// 	while (serial_available() > 0) serial_read(); // Flush
-
-// 	return out;
-// }
+void stepper_begin();
+void stepper_rms_current(uint16_t mA);
+void stepper_microsteps(uint16_t ms);
+void stepper_push();

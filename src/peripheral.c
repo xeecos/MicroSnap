@@ -298,7 +298,7 @@ uint16_t Peripheral_ProcessEvent(uint8_t task_id, uint16_t events)
             tmos_start_task(Peripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD);
         }
         // Perform periodic application task
-        // performPeriodicTask();
+        performPeriodicTask();
         return (events ^ SBP_PERIODIC_EVT);
     }
 
@@ -618,8 +618,9 @@ static void peripheralStateNotificationCB(gapRole_States_t newState, gapRoleEven
  */
 static void performPeriodicTask(void)
 {
-    uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x32};
-    peripheralChar4Notify(notiData, SIMPLEPROFILE_CHAR4_LEN);
+    // uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x32};
+    // peripheralChar4Notify(notiData, SIMPLEPROFILE_CHAR4_LEN);
+    // 心跳包
 }
 
 /*********************************************************************
