@@ -618,9 +618,9 @@ static void peripheralStateNotificationCB(gapRole_States_t newState, gapRoleEven
  */
 static void performPeriodicTask(void)
 {
-    // uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x32};
-    // peripheralChar4Notify(notiData, SIMPLEPROFILE_CHAR4_LEN);
-    // 心跳包
+    uint8_t notiData[SIMPLEPROFILE_CHAR4_LEN] = {0x32};
+    peripheralChar4Notify(notiData, SIMPLEPROFILE_CHAR4_LEN);
+    // 通过Char4广播心跳包
 }
 
 /*********************************************************************
@@ -635,6 +635,7 @@ static void performPeriodicTask(void)
  */
 static void peripheralChar4Notify(uint8_t *pValue, uint16_t len)
 {
+    return;
     attHandleValueNoti_t noti;
     if(len > (peripheralMTU - 3))
     {
