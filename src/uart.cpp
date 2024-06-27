@@ -10,13 +10,6 @@ void uart_init() {
     UART3_DefInit();
     UART3_BaudRateCfg(115200);
 }
-uint16_t user_rx_buffer_length_mask = 1024-1;
-uint16_t user_rx_buffer_write_index = 0;
-uint16_t user_tx_buffer_length_mask = 1024-1;
-uint16_t user_tx_buffer_write_index = 0;
-uint16_t user_tx_buffer_read_index = 0;
-uint8_t uart_rx_buffer[1024];
-uint8_t uart_tx_buffer[1024];
  
 void uart_send(uint8_t*msg,int len)
 {
@@ -25,4 +18,12 @@ void uart_send(uint8_t*msg,int len)
         while(R8_UART3_TFC == UART_FIFO_SIZE);
         R8_UART3_THR = msg[i];
     }
+}
+uint8_t uart_available()
+{
+    return R8_UART3_RFC;
+}
+uint8_t uart_read()
+{
+    return R8_UART3_RBR;
 }
