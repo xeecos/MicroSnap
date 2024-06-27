@@ -4,7 +4,7 @@
 #include "peripheral.h"
 #include "ble_usb_service.h"
 #include "app_usb.h"
-
+#include "task.h"
 
 // How often to perform periodic event
 #define SBP_PERIODIC_EVT_PERIOD              1600
@@ -712,8 +712,11 @@ void ble_usb_ServiceEvt(uint16_t connection_handle, ble_usb_evt_t *p_evt)
             PRINT("BLE RX DATA len:%d\r\n", p_evt->data.length);
 
             //ble to usb
-            USBSendData((uint8_t *)p_evt->data.p_data, p_evt->data.length);
-
+            // USBSendData((uint8_t *)p_evt->data.p_data, p_evt->data.length);
+            for(int i = 0; i < p_evt->data.length; i++)
+            {
+                task_parse(p_evt->data.p_data[i]);
+            }
             break;
         default:
             break;

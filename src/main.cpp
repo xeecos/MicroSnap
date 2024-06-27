@@ -6,6 +6,7 @@
 #include "app_usb.h"
 #include "uart.h"
 #include "stepper.h"
+#include "task.h"
 
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
@@ -33,6 +34,8 @@ int main(void)
     DelayMs(1000);
     GPIOB_SetBits(PIN_LED);
     uart_init();
+    task_init();
+
     // stepper.begin();
     // stepper.internal_Rsense(false);
     // stepper.dedge(true);
@@ -72,7 +75,7 @@ int main(void)
         //     c = 0xa;
         //     USBSendData(&c, 1);
         // 
-        // TMOS_SystemProcess(); 
+        TMOS_SystemProcess(); 
     }
 }
 

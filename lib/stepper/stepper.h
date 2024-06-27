@@ -1,6 +1,8 @@
 #pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdint.h>
-
 struct IHOLD_IRUN_t
 {
     constexpr static uint8_t address = 0x10;
@@ -297,3 +299,6 @@ void stepper_begin();
 void stepper_rms_current(uint16_t mA);
 void stepper_microsteps(uint16_t ms);
 void stepper_push();
+#ifdef __cplusplus
+}
+#endif
