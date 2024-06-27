@@ -136,12 +136,12 @@ uint8_t stepper_calcCRC(uint8_t datagram[], uint8_t len)
 
 uint8_t serial_available()
 {
-    int out = 0;
+    int out = R8_UART3_RFC;
     return out;
 }
 uint8_t serial_read()
 {
-    int out = 0;
+    int out = R8_UART3_RBR;
     return out;
 }
 uint8_t serial_write(const uint8_t data)
