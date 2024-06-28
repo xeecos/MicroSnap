@@ -11,6 +11,8 @@ void firmata_init()
 {
     mSendBuf = (uint8_t *)malloc(256);
     mRecvBuf = (uint8_t *)malloc(256);
+    mSendIdx = 0;
+    mRecvIdx = 0;
 }
 void firmata_start()
 {

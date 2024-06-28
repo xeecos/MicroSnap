@@ -30,16 +30,20 @@ uint8_t stepper_calcCRC(uint8_t datagram[], uint8_t len);
 uint64_t stepper_sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t timeout);
 void stepper_begin()
 {
+    TPOWERDOWN_register.sr = 20;
+    CHOPCONF_register.sr = 0x10000053;
+    PWMCONF_register.sr = 0xC10D0024;
     GCONF_register.i_scale_analog = 1;
-    GCONF_register.internal_rsense = 0; // OTP
     GCONF_register.en_spreadcycle = 0;  // OTP
     GCONF_register.multistep_filt = 1;  // OTP
     GCONF_register.pdn_disable = 1;
     GCONF_register.mstep_reg_select = 1;
     IHOLD_IRUN_register.iholddelay = 1; // OTP
-    TPOWERDOWN_register.sr = 20;
-    CHOPCONF_register.sr = 0x10000053;
-    PWMCONF_register.sr = 0xC10D0024;
+    GCONF_register.internal_rsense = 0; // OTP
+    CHOPCONF_register.dedge = 1;
+    CHOPCONF_register.toff = 2;
+    stepper_microsteps(256);
+    stepper_rms_current(1000);
 }
 void stepper_rms_current(uint16_t mA)
 {
