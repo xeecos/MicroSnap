@@ -3,20 +3,18 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-uint8_t *mSendBuf;
-uint8_t *mRecvBuf;
-uint16_t mSendIdx;
-uint16_t mRecvIdx;
+volatile uint8_t mSendBuf[256];
+volatile uint8_t mRecvBuf[256];
+volatile uint8_t mCmd[256];
+volatile uint16_t mSendIdx;
+volatile uint16_t mRecvIdx;
 void firmata_init()
 {
-    mSendBuf = (uint8_t *)malloc(256);
-    mRecvBuf = (uint8_t *)malloc(256);
     mSendIdx = 0;
     mRecvIdx = 0;
 }
 void firmata_start()
 {
-    memset(mSendBuf, 0, 256);
     mSendBuf[0] = 0xf0;
     mSendIdx++;
 }
@@ -45,7 +43,6 @@ void firmata_parse(uint8_t b)
     }
     else if (b == 0xf7)
     {
-        uint8_t *cmd = (uint8_t *)malloc(256);
         int n = 0;
         for (int i = 1; i < mRecvIdx; i++)
         {
@@ -54,11 +51,11 @@ void firmata_parse(uint8_t b)
             {
                 uint8_t c = (((mRecvBuf[i - 1]) << bits) & 0xff) + ((mRecvBuf[i]) >> (7 - bits));
                 // USBSerial.printf("%d\n",c);
-                cmd[n++] = c;
+                mCmd[n] = c;
+                n++;
             }
         }
-        task_command(cmd, mRecvIdx - 2);
-        free(cmd);
+        task_command((uint8_t *)mCmd, n);
     }
     else
     {

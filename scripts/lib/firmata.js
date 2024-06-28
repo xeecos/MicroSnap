@@ -134,7 +134,7 @@ class Firmata
                 if (bits > 0)
                 {
                     let c = (((this.mRecvBuf[i - 1]) << bits) & 0xff) + ((this.mRecvBuf[i]) >> (7 - bits));
-                    console.log(String.fromCharCode(c), c);
+                    console.log(c);
                 }
             }
         }

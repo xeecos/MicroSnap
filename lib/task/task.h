@@ -8,7 +8,7 @@ void task_add(int snaps, int steps, int dir, int speed, int waitingTime, int sna
 void task_start();
 void task_running();
 void task_parse(uint8_t c);
-void task_command(uint8_t *cmd, int len);
+void task_command(uint8_t *cmd, uint8_t len);
 #ifdef __cplusplus
 }
 #endif

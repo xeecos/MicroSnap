@@ -31,10 +31,10 @@ void task_parse(uint8_t c)
 {
     firmata_parse(c);
     // app_usb_notify(data, data_len);
-    // USBSendData(data, data_len);
+    // USBSendData(&c, 1);
 }
 
-void task_command(uint8_t *cmd, int len)
+void task_command(uint8_t *cmd, uint8_t len)
 {
     if(len>0)
     {
@@ -61,7 +61,7 @@ void task_command(uint8_t *cmd, int len)
                     float speed = f.val;
                     char *res = (char *)malloc(64);
                     memset(res, 0, 64);
-                    sprintf(res, "steps:%d, speed:%.2f\n", steps, speed);
+                    sprintf(res, "steps:%d, speed:%d\n", steps, (int)(speed*100));
                     USBSendData((uint8_t*)res, strlen(res));
                     free(res);
                 }
