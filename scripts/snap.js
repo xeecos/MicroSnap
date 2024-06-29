@@ -16,8 +16,8 @@ if (uart_port)
         {
             return console.log('Error opening port: ', err.message)
         }
-        console.log("opened",Buffer.from(Firmata.forward(1000, 1)));
-        let arr = Firmata.forward(2356, 14.5);
+        console.log("opened");
+        let arr = Firmata.forward(10000, 1);
         for(let i=0;i<arr.length;i++)
         {
             port.write(Buffer.from([arr[i]]));

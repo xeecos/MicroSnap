@@ -20,8 +20,8 @@ static CHOPCONF_t CHOPCONF_register;
 static SLAVECONF_t SLAVECONF_register;
 static TPWMTHRS_t TPWMTHRS_register;
 static VACTUAL_t VACTUAL_register;
-static long position = 0;
-static long targetPoision = 0;
+volatile long position = 0;
+volatile long targetPoision = 0;
 uint8_t serial_available();
 uint8_t serial_read();
 uint8_t serial_write(const uint8_t data);
@@ -40,6 +40,7 @@ void stepper_init()
     GPIOA_ResetBits(PIN_FOCUS);
     GPIOA_ResetBits(PIN_SHOT);
 
+    GPIOB_ResetBits(PIN_STEPPER_EN);
     TPOWERDOWN_register.sr = 20;
     CHOPCONF_register.sr = 0x10000053;
     PWMCONF_register.sr = 0xC10D0024;
@@ -52,9 +53,10 @@ void stepper_init()
     GCONF_register.internal_rsense = 0; // OTP
     CHOPCONF_register.dedge = 1;
     CHOPCONF_register.toff = 2;
-    stepper_microsteps(256);
+    stepper_microsteps(4);
     stepper_rms_current(1000);
     stepper_push();
+    GPIOB_SetBits(PIN_STEPPER_EN);
 }
 void stepper_rms_current(uint16_t mA)
 {
@@ -301,7 +303,7 @@ void stepper_running()
     {
         GPIOB_ResetBits(PIN_STEPPER_EN);
         GPIOA_ResetBits(PIN_STEPPER_DIR);
-        GPIOA_SetBits(PIN_STEPPER_STEP);
+        GPIOA_InverseBits(PIN_STEPPER_STEP);
         position--;
     }
     else

@@ -99,7 +99,7 @@ class Firmata
     }
     stepper (microsteps, current)
     {
-        this._cmd = [6, 3];
+        this._cmd = [6, 5];
         this._cmd = this._cmd.concat(Format.short2bytes(microsteps)); // 步进电机细分
         this._cmd = this._cmd.concat(Format.short2bytes(current));  // 步进电机电流，mA
         return this.data;
