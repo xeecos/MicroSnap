@@ -13,13 +13,18 @@ __HIGH_CODE
 __attribute__((noinline)) void Main_Circulation()
 {
     long ms = TMOS_GetSystemClock();
+    long ledtime = ms;
     while (1)
     {
-        if (TMOS_GetSystemClock() - ms > 1)
+        if (TMOS_GetSystemClock() - ms > 0)
         {
-            GPIOB_InverseBits(PIN_LED);
             ms = TMOS_GetSystemClock();
             task_running();
+        }
+        if (TMOS_GetSystemClock() - ledtime > 160)
+        {
+            ledtime = TMOS_GetSystemClock();
+            GPIOB_InverseBits(PIN_LED);
         }
         TMOS_SystemProcess();
     }
