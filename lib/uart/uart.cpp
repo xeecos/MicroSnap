@@ -16,14 +16,16 @@ void uart_send(uint8_t*msg,int len)
     for (int i = 0; i < len;i++)
     {
         while(R8_UART3_TFC == UART_FIFO_SIZE);
-        R8_UART3_THR = msg[i];
+        R8_UART3_THR = *msg++;
     }
 }
 uint8_t uart_available()
 {
-    return R8_UART3_RFC;
+    uint8_t c = R8_UART3_RFC;
+    return c;
 }
 uint8_t uart_read()
 {
-    return R8_UART3_RBR;
+    uint8_t c = R8_UART3_RBR;
+    return c;
 }

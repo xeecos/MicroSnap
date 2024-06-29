@@ -132,11 +132,11 @@ void task_command(uint8_t *cmd, uint8_t len)
                     //     f.bytes[i] = cmd[4 + i];
                     // float speed = f.val;
                     stepper_move(steps);
-                    char *res = (char *)malloc(64);
-                    memset(res, 0, 64);
-                    sprintf(res, "forward:%d\n", steps);
-                    USBSendData((uint8_t*)res, strlen(res));
-                    free(res);
+                    // char *res = (char *)malloc(64);
+                    // memset(res, 0, 64);
+                    // sprintf(res, "forward:%d\n", steps);
+                    // USBSendData((uint8_t*)res, strlen(res));
+                    // free(res);
                 }
                 else if (cmd[1] == 0x2)
                 {
@@ -150,11 +150,11 @@ void task_command(uint8_t *cmd, uint8_t len)
                     //     f.bytes[i] = cmd[4 + i];
                     // float speed = f.val;
                     stepper_move(-steps);
-                    char *res = (char *)malloc(64);
-                    memset(res, 0, 64);
-                    sprintf(res, "backward:%d\n", steps);
-                    USBSendData((uint8_t*)res, strlen(res));
-                    free(res);
+                    // char *res = (char *)malloc(64);
+                    // memset(res, 0, 64);
+                    // sprintf(res, "backward:%d\n", steps);
+                    // USBSendData((uint8_t*)res, strlen(res));
+                    // free(res);
                 }
                 else if (cmd[1] == 0x3)
                 {
@@ -188,11 +188,11 @@ void task_command(uint8_t *cmd, uint8_t len)
                     stepper_microsteps(microsteps);
                     stepper_rms_current(current);
                     GPIOB_SetBits(PIN_STEPPER_EN);
-                    char *res = (char *)malloc(64);
-                    memset(res, 0, 64);
-                    sprintf(res, "stepper:%d %d\n", microsteps, current);
-                    USBSendData((uint8_t*)res, strlen(res));
-                    free(res);
+                    // char *res = (char *)malloc(64);
+                    // memset(res, 0, 64);
+                    // sprintf(res, "stepper:%d %d\n", microsteps, current);
+                    // USBSendData((uint8_t*)res, strlen(res));
+                    // free(res);
                 }
             }
             break;

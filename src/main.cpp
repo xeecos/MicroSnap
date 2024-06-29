@@ -41,7 +41,6 @@ int main(void)
     GAPRole_PeripheralInit();
     Peripheral_Init();
     app_usb_init();
-    uart_init();
     stepper_init();
     task_init();
     Main_Circulation();

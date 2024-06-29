@@ -32,7 +32,6 @@ uint8_t stepper_calcCRC(uint8_t datagram[], uint8_t len);
 uint64_t stepper_sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t timeout);
 void stepper_init()
 {
-    
     GPIOA_ModeCfg(PIN_STEPPER_DIR | PIN_STEPPER_STEP | PIN_FOCUS | PIN_SHOT, GPIO_ModeOut_PP_20mA);
     GPIOB_ModeCfg(PIN_LED | PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
     GPIOB_SetBits(PIN_STEPPER_EN);
@@ -40,6 +39,7 @@ void stepper_init()
     GPIOA_ResetBits(PIN_FOCUS);
     GPIOA_ResetBits(PIN_SHOT);
 
+    uart_init();
     GPIOB_ResetBits(PIN_STEPPER_EN);
     TPOWERDOWN_register.sr = 20;
     CHOPCONF_register.sr = 0x10000053;
