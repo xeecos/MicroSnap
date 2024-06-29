@@ -1,8 +1,11 @@
 #pragma once
+#pragma pack(push, 1)
 #ifdef __cplusplus
 extern "C" {
 #endif
 #include <stdint.h>
+
+
 struct IHOLD_IRUN_t
 {
     constexpr static uint8_t address = 0x10;
@@ -82,7 +85,8 @@ struct CHOPCONF_t
         {
             uint8_t toff : 4,
                 hstrt : 3,
-                hend : 4, : 4,
+                hend : 4,
+                 : 4,
                 tbl : 2;
             bool vsense : 1;
             uint8_t : 6,
@@ -297,8 +301,8 @@ struct PWM_SCALE_t
 
 void stepper_init();
 void stepper_rms_current(uint16_t mA);
-void stepper_microsteps(uint16_t ms);
-void stepper_push();
+uint8_t stepper_microsteps(uint16_t ms);
+uint32_t stepper_push();
 void stepper_move(int steps);
 void stepper_moveto(int pos);
 void stepper_set_position(int pos);
@@ -307,3 +311,4 @@ bool stepper_is_idle();
 #ifdef __cplusplus
 }
 #endif
+#pragma pack(pop)

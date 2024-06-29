@@ -72,7 +72,6 @@ void task_parse(uint8_t c)
     // app_usb_notify(data, data_len);
     // USBSendData(&c, 1);
 }
-
 void task_command(uint8_t *cmd, uint8_t len)
 {
     if (len > 0)
@@ -184,14 +183,12 @@ void task_command(uint8_t *cmd, uint8_t len)
                     for (int i = 0; i < 2; i++)
                         s.bytes[i] = cmd[4 + i];
                     uint16_t current = s.val;
-                    GPIOB_ResetBits(PIN_STEPPER_EN);
-                    stepper_microsteps(microsteps);
+                    uint8_t mres = stepper_microsteps(microsteps);
                     stepper_rms_current(current);
                     stepper_push();
-                    GPIOB_SetBits(PIN_STEPPER_EN);
                     // char *res = (char *)malloc(64);
                     // memset(res, 0, 64);
-                    // sprintf(res, "stepper:%d %d\n", microsteps, current);
+                    // sprintf(res, "stepper:%d %lx\n", mres, stepper_push());
                     // USBSendData((uint8_t*)res, strlen(res));
                     // free(res);
                 }

@@ -2,6 +2,8 @@
 #include "uart.h"
 #include "pinmap.h"
 #include "config.h"
+
+
 static float Rsense = 0.1;
 static constexpr uint8_t TMC_READ = 0x00, TMC_WRITE = 0x80;
 static constexpr uint8_t TMC2208_SYNC = 0x05, TMC2208_SLAVE_ADDR = 0x00;
@@ -12,14 +14,14 @@ static bool CRCerror = false;
 static uint16_t bytesWritten = 0;
 static constexpr uint8_t replyDelay = 2;
 
-static GCONF_t GCONF_register;
-static PWMCONF_t PWMCONF_register;
-static TPOWERDOWN_t TPOWERDOWN_register;
-static IHOLD_IRUN_t IHOLD_IRUN_register;
-static CHOPCONF_t CHOPCONF_register;
-static SLAVECONF_t SLAVECONF_register;
-static TPWMTHRS_t TPWMTHRS_register;
-static VACTUAL_t VACTUAL_register;
+volatile GCONF_t GCONF_register;
+volatile PWMCONF_t PWMCONF_register;
+volatile TPOWERDOWN_t TPOWERDOWN_register;
+volatile IHOLD_IRUN_t IHOLD_IRUN_register;
+volatile CHOPCONF_t CHOPCONF_register;
+volatile SLAVECONF_t SLAVECONF_register;
+volatile TPWMTHRS_t TPWMTHRS_register;
+volatile VACTUAL_t VACTUAL_register;
 volatile long position = 0;
 volatile long targetPoision = 0;
 uint8_t serial_available();
@@ -40,7 +42,6 @@ void stepper_init()
     GPIOA_ResetBits(PIN_SHOT);
 
     uart_init();
-    GPIOB_ResetBits(PIN_STEPPER_EN);
     TPOWERDOWN_register.sr = 20;
     CHOPCONF_register.sr = 0x10000053;
     PWMCONF_register.sr = 0xC10D0024;
@@ -53,10 +54,9 @@ void stepper_init()
     GCONF_register.internal_rsense = 0; // OTP
     CHOPCONF_register.dedge = 1;
     CHOPCONF_register.toff = 2;
-    stepper_microsteps(4);
-    stepper_rms_current(1000);
+    // stepper_microsteps(4);
+    // stepper_rms_current(1000);
     stepper_push();
-    GPIOB_SetBits(PIN_STEPPER_EN);
 }
 void stepper_rms_current(uint16_t mA)
 {
@@ -81,7 +81,7 @@ void stepper_rms_current(uint16_t mA)
     // val_mA = mA;
 }
 
-void stepper_microsteps(uint16_t ms)
+uint8_t stepper_microsteps(uint16_t ms)
 {
     switch (ms)
     {
@@ -115,8 +115,9 @@ void stepper_microsteps(uint16_t ms)
     default:
         break;
     }
+    return CHOPCONF_register.mres;
 }
-void stepper_push()
+uint32_t stepper_push()
 {
     stepper_write(GCONF_register.address, GCONF_register.sr);
     stepper_write(IHOLD_IRUN_register.address, IHOLD_IRUN_register.sr);
@@ -126,6 +127,7 @@ void stepper_push()
     stepper_write(VACTUAL_register.address, VACTUAL_register.sr);
     stepper_write(CHOPCONF_register.address, CHOPCONF_register.sr);
     stepper_write(PWMCONF_register.address, PWMCONF_register.sr);
+    return CHOPCONF_register.sr;
 }
 
 uint8_t stepper_calcCRC(uint8_t datagram[], uint8_t len)
