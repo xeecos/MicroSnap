@@ -63,6 +63,7 @@ void task_running()
             stepper_moveto(0);
         }
     }
+    stepper_running();
 }
 
 void task_parse(uint8_t c)

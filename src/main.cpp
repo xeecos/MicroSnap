@@ -7,9 +7,6 @@
 #include "uart.h"
 #include "stepper.h"
 #include "task.h"
-#include "stdio.h"
-#include <string.h>
-#include <stdlib.h>
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 __HIGH_CODE
@@ -22,7 +19,6 @@ __attribute__((noinline)) void Main_Circulation()
         {
             GPIOB_InverseBits(PIN_LED);
             ms = TMOS_GetSystemClock();
-            stepper_running();
             task_running();
         }
         TMOS_SystemProcess();
