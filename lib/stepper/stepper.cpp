@@ -1,5 +1,6 @@
 #include "stepper.h"
 #include "uart.h"
+#include "pinmap.h"
 #include "config.h"
 static float Rsense = 0.1;
 static constexpr uint8_t TMC_READ = 0x00, TMC_WRITE = 0x80;
@@ -19,7 +20,8 @@ static CHOPCONF_t CHOPCONF_register;
 static SLAVECONF_t SLAVECONF_register;
 static TPWMTHRS_t TPWMTHRS_register;
 static VACTUAL_t VACTUAL_register;
-
+static long position = 0;
+static long targetPoision = 0;
 uint8_t serial_available();
 uint8_t serial_read();
 uint8_t serial_write(const uint8_t data);
@@ -28,8 +30,16 @@ void stepper_write(uint8_t addr, uint32_t regVal);
 uint32_t stepper_read(uint8_t addr);
 uint8_t stepper_calcCRC(uint8_t datagram[], uint8_t len);
 uint64_t stepper_sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t timeout);
-void stepper_begin()
+void stepper_init()
 {
+    
+    GPIOA_ModeCfg(PIN_STEPPER_DIR | PIN_STEPPER_STEP | PIN_FOCUS | PIN_SHOT, GPIO_ModeOut_PP_20mA);
+    GPIOB_ModeCfg(PIN_LED | PIN_STEPPER_EN, GPIO_ModeOut_PP_20mA);
+    GPIOB_SetBits(PIN_STEPPER_EN);
+    GPIOB_ResetBits(PIN_LED);
+    GPIOA_ResetBits(PIN_FOCUS);
+    GPIOA_ResetBits(PIN_SHOT);
+
     TPOWERDOWN_register.sr = 20;
     CHOPCONF_register.sr = 0x10000053;
     PWMCONF_register.sr = 0xC10D0024;
@@ -44,6 +54,7 @@ void stepper_begin()
     CHOPCONF_register.toff = 2;
     stepper_microsteps(256);
     stepper_rms_current(1000);
+    stepper_push();
 }
 void stepper_rms_current(uint16_t mA)
 {
@@ -275,4 +286,43 @@ uint64_t stepper_sendDatagram(uint8_t datagram[], const uint8_t len, uint16_t ti
         serial_read(); // Flush
 
     return out;
+}
+void stepper_running()
+{
+    long dPos = targetPoision - position;
+    if (dPos>0)
+    {
+        GPIOB_ResetBits(PIN_STEPPER_EN);
+        GPIOA_SetBits(PIN_STEPPER_DIR);
+        GPIOA_InverseBits(PIN_STEPPER_STEP);
+        position++;
+    }
+    else if(dPos<0)
+    {
+        GPIOB_ResetBits(PIN_STEPPER_EN);
+        GPIOA_ResetBits(PIN_STEPPER_DIR);
+        GPIOA_SetBits(PIN_STEPPER_STEP);
+        position--;
+    }
+    else
+    {
+        GPIOB_SetBits(PIN_STEPPER_EN);
+    }
+}
+void stepper_move(int steps)
+{
+    targetPoision += steps;
+}
+void stepper_moveto(int pos)
+{
+    targetPoision = pos;
+}
+void stepper_set_position(int pos)
+{
+    position = pos;
+    targetPoision = pos;
+}
+bool stepper_is_idle()
+{
+    return targetPoision == position;
 }

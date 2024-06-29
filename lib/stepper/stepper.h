@@ -295,10 +295,15 @@ struct PWM_SCALE_t
     };
 };
 
-void stepper_begin();
+void stepper_init();
 void stepper_rms_current(uint16_t mA);
 void stepper_microsteps(uint16_t ms);
 void stepper_push();
+void stepper_move(int steps);
+void stepper_moveto(int pos);
+void stepper_set_position(int pos);
+void stepper_running();
+bool stepper_is_idle();
 #ifdef __cplusplus
 }
 #endif
