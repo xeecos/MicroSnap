@@ -78,110 +78,110 @@ void task_command(uint8_t *cmd, uint8_t len)
     {
         switch (cmd[0])
         {
-            
-        case 0x02:
-        {
-            if (cmd[1] == 0x0)
+            case 0x02:
             {
-                GPIOA_SetBits(PIN_SHOT);
+                if (cmd[1] == 0x0)
+                {
+                    GPIOA_SetBits(PIN_SHOT);
+                }
+                else if (cmd[1] == 0x1)
+                {
+                    GPIOA_ResetBits(PIN_SHOT);
+                }
             }
-            else if (cmd[1] == 0x1)
+            break;
+            case 0x05:
             {
-                GPIOA_ResetBits(PIN_SHOT);
+                if (cmd[1] == 0x1)
+                {
+                    short_t s;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[2 + i];
+                    uint16_t frames = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[4 + i];
+                    uint16_t steps = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[6 + i];
+                    uint16_t time1 = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[8 + i];
+                    uint16_t time2 = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[10 + i];
+                    uint16_t time3 = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[12 + i];
+                    uint16_t end = s.val;
+                    task_add(frames, steps, time1, time2, time3, end);
+                }
             }
-        }
-        break;
-        case 0x05:
-        {
-            if (cmd[1] == 0x1)
+            break;
+            case 0x06:
             {
-                short_t s;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[2 + i];
-                uint16_t frames = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[4 + i];
-                uint16_t steps = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[6 + i];
-                uint16_t time1 = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[8 + i];
-                uint16_t time2 = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[10 + i];
-                uint16_t time3 = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[12 + i];
-                uint16_t end = s.val;
-                task_add(frames, steps, time1, time2, time3, end);
+                if (cmd[1] == 0x1)
+                {
+                    // forward
+                    short_t s;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[2 + i];
+                    uint16_t steps = s.val;
+                    // float_t f;
+                    // for (int i = 0; i < 4; i++)
+                    //     f.bytes[i] = cmd[4 + i];
+                    // float speed = f.val;
+                    stepper_move(steps);
+                    // char *res = (char *)malloc(64);
+                    // memset(res, 0, 64);
+                    // sprintf(res, "steps:%d, speed:%d\n", steps, (int)(speed*100));
+                    // USBSendData((uint8_t*)res, strlen(res));
+                    // free(res);
+                }
+                else if (cmd[1] == 0x2)
+                {
+                    // backward
+                    short_t s;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[2 + i];
+                    uint16_t steps = s.val;
+                    // float_t f;
+                    // for (int i = 0; i < 4; i++)
+                    //     f.bytes[i] = cmd[4 + i];
+                    // float speed = f.val;
+                    stepper_move(-steps);
+                    // char *res = (char *)malloc(64);
+                    // memset(res, 0, 64);
+                    // sprintf(res, "steps:%d, speed:%.2f\n", steps, speed);
+                    // USBSendData((uint8_t*)res, strlen(res));
+                    // free(res);
+                }
+                else if (cmd[1] == 0x3)
+                {
+                    // setting
+                    short_t s;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[2 + i];
+                    uint16_t microsteps = s.val;
+                    for (int i = 0; i < 2; i++)
+                        s.bytes[i] = cmd[4 + i];
+                    uint16_t current = s.val;
+                    stepper_microsteps(microsteps);
+                    stepper_rms_current(current);
+                }
             }
-        }
-        break;
-        case 0x06:
-        {
-            if (cmd[1] == 0x1)
+            break;
+            case 0x7:
             {
-                // forward
-                short_t s;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[2 + i];
-                uint16_t steps = s.val;
-                // float_t f;
-                // for (int i = 0; i < 4; i++)
-                //     f.bytes[i] = cmd[4 + i];
-                // float speed = f.val;
-                stepper_move(steps);
-                // char *res = (char *)malloc(64);
-                // memset(res, 0, 64);
-                // sprintf(res, "steps:%d, speed:%d\n", steps, (int)(speed*100));
-                // USBSendData((uint8_t*)res, strlen(res));
-                // free(res);
+                if (cmd[1] == 0x1)
+                {
+                    // version
+                    
+                }
+                else if (cmd[1] == 0x2)
+                {
+                    // status
+                }
             }
-            else if (cmd[1] == 0x2)
-            {
-                // backward
-                short_t s;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[2 + i];
-                uint16_t steps = s.val;
-                // float_t f;
-                // for (int i = 0; i < 4; i++)
-                //     f.bytes[i] = cmd[4 + i];
-                // float speed = f.val;
-                stepper_move(-steps);
-                // char *res = (char *)malloc(64);
-                // memset(res, 0, 64);
-                // sprintf(res, "steps:%d, speed:%.2f\n", steps, speed);
-                // USBSendData((uint8_t*)res, strlen(res));
-                // free(res);
-            }
-            else if (cmd[1] == 0x3)
-            {
-                // setting
-                short_t s;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[2 + i];
-                uint16_t microsteps = s.val;
-                for (int i = 0; i < 2; i++)
-                    s.bytes[i] = cmd[4 + i];
-                uint16_t current = s.val;
-                stepper_microsteps(microsteps);
-                stepper_rms_current(current);
-            }
-        }
-        break;
-        case 0x7:
-        {
-            if (cmd[1] == 0x1)
-            {
-                // version
-            }
-            else if (cmd[1] == 0x2)
-            {
-                // status
-            }
-        }
         }
     }
 }

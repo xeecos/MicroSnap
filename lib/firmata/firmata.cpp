@@ -63,7 +63,7 @@ void firmata_parse(uint8_t b)
         mRecvIdx++;
     }
 }
-void firmate_data(uint8_t *data, int len)
+void firmata_data(uint8_t *data, int len)
 {
     firmata_start();
     for (int i = 0; i < len; i++)
@@ -71,4 +71,12 @@ void firmate_data(uint8_t *data, int len)
         firmata_write(data[i]);
     }
     firmata_end();
+}
+uint8_t *firmata_get()
+{
+    return (uint8_t*)mSendBuf;
+}
+uint8_t firmata_length()
+{
+    return mSendIdx;
 }
