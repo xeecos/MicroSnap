@@ -187,6 +187,7 @@ void task_command(uint8_t *cmd, uint8_t len)
                     GPIOB_ResetBits(PIN_STEPPER_EN);
                     stepper_microsteps(microsteps);
                     stepper_rms_current(current);
+                    stepper_push();
                     GPIOB_SetBits(PIN_STEPPER_EN);
                     // char *res = (char *)malloc(64);
                     // memset(res, 0, 64);
