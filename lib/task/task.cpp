@@ -121,59 +121,31 @@ void task_command(uint8_t *cmd, uint8_t len)
             {
                 if (cmd[1] == 0x1)
                 {
-                    // forward
-                    short_t s;
-                    for (int i = 0; i < 2; i++)
+                    long_t s;
+                    for (int i = 0; i < 4; i++)
                         s.bytes[i] = cmd[2 + i];
-                    uint16_t steps = s.val;
-                    // float_t f;
-                    // for (int i = 0; i < 4; i++)
-                    //     f.bytes[i] = cmd[4 + i];
-                    // float speed = f.val;
+                    int32_t steps = s.val;
                     stepper_move(steps);
-                    // char *res = (char *)malloc(64);
-                    // memset(res, 0, 64);
-                    // sprintf(res, "forward:%d\n", steps);
-                    // USBSendData((uint8_t*)res, strlen(res));
-                    // free(res);
                 }
                 else if (cmd[1] == 0x2)
                 {
-                    // backward
-                    short_t s;
-                    for (int i = 0; i < 2; i++)
+                    // moveto
+                    long_t s;
+                    for (int i = 0; i < 4; i++)
                         s.bytes[i] = cmd[2 + i];
-                    uint16_t steps = s.val;
-                    // float_t f;
-                    // for (int i = 0; i < 4; i++)
-                    //     f.bytes[i] = cmd[4 + i];
-                    // float speed = f.val;
-                    stepper_move(-steps);
-                    // char *res = (char *)malloc(64);
-                    // memset(res, 0, 64);
-                    // sprintf(res, "backward:%d\n", steps);
-                    // USBSendData((uint8_t*)res, strlen(res));
-                    // free(res);
+                    int32_t steps = s.val;
+                    stepper_moveto(steps);
                 }
                 else if (cmd[1] == 0x3)
                 {
-                    // moveto
-                    short_t s;
-                    for (int i = 0; i < 2; i++)
-                        s.bytes[i] = cmd[2 + i];
-                    uint16_t steps = s.val;
-                    stepper_moveto(steps);
-                }
-                else if (cmd[1] == 0x4)
-                {
                     // set position
-                    short_t s;
-                    for (int i = 0; i < 2; i++)
+                    long_t s;
+                    for (int i = 0; i < 4; i++)
                         s.bytes[i] = cmd[2 + i];
-                    uint16_t steps = s.val;
+                    int32_t steps = s.val;
                     stepper_set_position(steps);
                 }
-                else if (cmd[1] == 0x5)
+                else if (cmd[1] == 0x4)
                 {
                     // setting
                     short_t s;
@@ -183,7 +155,7 @@ void task_command(uint8_t *cmd, uint8_t len)
                     for (int i = 0; i < 2; i++)
                         s.bytes[i] = cmd[4 + i];
                     uint16_t current = s.val;
-                    uint8_t mres = stepper_microsteps(microsteps);
+                    stepper_microsteps(microsteps);
                     stepper_rms_current(current);
                     stepper_push();
                     // char *res = (char *)malloc(64);
@@ -199,11 +171,18 @@ void task_command(uint8_t *cmd, uint8_t len)
                 if (cmd[1] == 0x1)
                 {
                     // version
-                    
+                    firmata_data((uint8_t*)("1.0.0"), 5);
+                    USBSendData(firmata_get(), firmata_length());
                 }
                 else if (cmd[1] == 0x2)
                 {
                     // status
+                    char *res = (char *)malloc(64);
+                    memset(res, 0, 64);
+                    sprintf(res, "%d %ld %d", stepper_get_microsteps(), stepper_get_position(), task.snaps);
+                    firmata_data((uint8_t*)res, strlen(res));
+                    USBSendData(firmata_get(), firmata_length());
+                    free(res);
                 }
             }
         }

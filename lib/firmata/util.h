@@ -12,8 +12,13 @@ union float_t
 };
 union short_t
 {
-    uint16_t val;
+    int16_t val;
     uint8_t bytes[2];
+};
+union long_t
+{
+    int32_t val;
+    uint8_t bytes[4];
 };
 #ifdef __cplusplus
 }

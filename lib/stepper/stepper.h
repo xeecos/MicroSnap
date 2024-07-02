@@ -306,6 +306,8 @@ uint32_t stepper_push();
 void stepper_move(int steps);
 void stepper_moveto(int pos);
 void stepper_set_position(int pos);
+uint16_t stepper_get_microsteps();
+int32_t stepper_get_position();
 void stepper_running();
 bool stepper_is_idle();
 #ifdef __cplusplus

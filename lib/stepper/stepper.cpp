@@ -24,6 +24,7 @@ volatile TPWMTHRS_t TPWMTHRS_register;
 volatile VACTUAL_t VACTUAL_register;
 volatile long position = 0;
 volatile long targetPoision = 0;
+volatile uint16_t microsteps = 32;
 uint8_t serial_available();
 uint8_t serial_read();
 uint8_t serial_write(const uint8_t data);
@@ -54,8 +55,8 @@ void stepper_init()
     GCONF_register.internal_rsense = 0; // OTP
     CHOPCONF_register.dedge = 1;
     CHOPCONF_register.toff = 2;
-    // stepper_microsteps(4);
-    // stepper_rms_current(1000);
+    stepper_microsteps(32);
+    stepper_rms_current(1000);
     stepper_push();
 }
 void stepper_rms_current(uint16_t mA)
@@ -83,6 +84,7 @@ void stepper_rms_current(uint16_t mA)
 
 uint8_t stepper_microsteps(uint16_t ms)
 {
+    microsteps = ms;
     switch (ms)
     {
     case 256:
@@ -116,6 +118,15 @@ uint8_t stepper_microsteps(uint16_t ms)
         break;
     }
     return CHOPCONF_register.mres;
+}
+uint16_t stepper_get_microsteps()
+{
+    return microsteps;
+}
+
+int32_t stepper_get_position()
+{
+    return position;
 }
 uint32_t stepper_push()
 {
