@@ -25,6 +25,8 @@ void task_add(int snaps, int steps, int delayTime, int waitingTime, int duringTi
     task.waiting = waitingTime;
     task.during = duringTime;
     task.end = endType;
+    current.during = 0;
+    current.waiting = -1;
     stepper_set_position(0);
 }
 void task_start()
@@ -41,6 +43,7 @@ void task_running()
         if (stepper_is_idle() && task.snaps > 0 && current.during == 0)
         {
             task.snaps--;
+            if(current.waiting>=0)stepper_move(task.steps);
             current.during = task.during;
             current.waiting = task.waiting;
         }
@@ -54,8 +57,11 @@ void task_running()
         }
         else if (stepper_is_idle() && current.during > 0)
         {
-            GPIOA_ResetBits(PIN_SHOT);
             current.during--;
+            if(current.during==task.during-160)
+            {
+                GPIOA_ResetBits(PIN_SHOT);
+            }
         }
         else if (stepper_is_idle() && task.snaps == 0 && task.end > 0)
         {

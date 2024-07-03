@@ -16,7 +16,7 @@ __attribute__((noinline)) void Main_Circulation()
     long ledtime = ms;
     while (1)
     {
-        if (TMOS_GetSystemClock() - ms > 0)
+        if (TMOS_GetSystemClock() - ms > 1)
         {
             ms = TMOS_GetSystemClock();
             task_running();

@@ -92,8 +92,8 @@ class Firmata
     }
     backward (steps, speed)
     {
-        this._cmd = [6, 2];
-        this._cmd = this._cmd.concat(Format.short2bytes(steps)); // 步进电机步数
+        this._cmd = [6, 1];
+        this._cmd = this._cmd.concat(Format.short2bytes(-steps)); // 步进电机步数
         this._cmd = this._cmd.concat(Format.float2bytes(speed)); // 步进电机速度，mm/s
         return this.data;
     }
