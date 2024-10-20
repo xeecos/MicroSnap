@@ -106,7 +106,7 @@ void task_command(uint8_t *cmd, uint8_t len)
                     uint16_t frames = s.val;
                     for (int i = 0; i < 2; i++)
                         s.bytes[i] = cmd[4 + i];
-                    uint16_t steps = s.val;
+                    int16_t steps = s.val;
                     for (int i = 0; i < 2; i++)
                         s.bytes[i] = cmd[6 + i];
                     uint16_t time1 = s.val;
